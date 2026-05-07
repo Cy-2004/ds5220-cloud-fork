@@ -3,6 +3,7 @@ import boto3
 from decimal import Decimal
 import logging
 from boto3.dynamodb.conditions import Key
+import time
 
 # chalice setup
 app = Chalice(app_name='dp3-houston-water')
@@ -193,11 +194,13 @@ def trend():
 def plot():
     logger.info("'/plot' endpoint called")
 
+    timestamp = int(time.time())
+
     try:
         logger.info("Preparing plot URL")
 
         plot_url = (
-            "https://dp3-houston-water-plots.s3.amazonaws.com/latest.png"
+            f"https://dp3-houston-water-plots.s3.amazonaws.com/latest.png?v={timestamp}"
         )
 
         logger.info(f"Returning plot URL: {plot_url}")
