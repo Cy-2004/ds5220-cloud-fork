@@ -1,0 +1,11 @@
+{
+  "version": "2.0",
+  "app_name": "dp3-houston-water",
+  "stages": {
+    "dev": {
+      "api_gateway_stage": "api",
+      "manage_iam_role": false,
+      "iam_role_arn": "arn:aws:iam::655790569976:role/dp3-houston-water-dev"
+    }
+  }
+}
