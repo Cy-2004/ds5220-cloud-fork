@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import io
 import logging
 from boto3.dynamodb.conditions import Key
+from matplotlib.ticker import MaxNLocator
 
 # config
 TABLE_NAME = "dp3-houston-water-level"
@@ -24,6 +25,7 @@ table = dynamodb.Table(TABLE_NAME)
 
 s3 = boto3.client("s3", region_name=REGION)
 
+# query data
 def get_data():
     logger.info("Querying DynamoDB table")
 
@@ -39,12 +41,14 @@ def get_data():
         logger.error(f"DynamoDB query failed: {str(e)}")
         return []
 
+# generate plot
 def create_plot(items):
     logger.info("Creating dataframe")
 
     try:
         df = pd.DataFrame(items)
 
+        # remove rows missing readable_time
         df = df.dropna(subset=["readable_time"])
 
         if len(df) < 2:
@@ -65,9 +69,10 @@ def create_plot(items):
             df["water_level"],
             marker='o'
         )
-        plt.title("Houston Water Level Over Time")
+        plt.title("Houston Buffalo Bayou Water Level Over Time")
         plt.xlabel("Time")
         plt.ylabel("Water Level (ft)")
+        plt.gca().xaxis.set_major_locator(MaxNLocator(nbins=10))
         plt.xticks(rotation=45)
         plt.tight_layout()
 
@@ -83,6 +88,7 @@ def create_plot(items):
         logger.error(f"Plot generation failed: {str(e)}")
         return None
 
+# upload to s3
 def upload_plot(buffer):
     logger.info("Uploading plot to S3")
 

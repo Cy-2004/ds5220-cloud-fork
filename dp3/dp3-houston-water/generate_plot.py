@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import io
 import logging
 from boto3.dynamodb.conditions import Key
+from matplotlib.ticker import MaxNLocator
 
 # config
 TABLE_NAME = "dp3-houston-water-level"
@@ -71,6 +72,7 @@ def create_plot(items):
         plt.title("Houston Buffalo Bayou Water Level Over Time")
         plt.xlabel("Timestamp")
         plt.ylabel("Water Level (ft)")
+        plt.gca().xaxis.set_major_locator(MaxNLocator(nbins=10))
         plt.xticks(rotation=45)
         plt.tight_layout()
 
